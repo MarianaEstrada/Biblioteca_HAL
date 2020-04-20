@@ -50,6 +50,8 @@ B1 corresponde al pulsador de la tarjeta y esta función se encarga de determina
 
 ## Ejemplo 1:
 
+Pasos para la creación de un proyecto [aquí](https://github.com/MarianaEstrada/Pasos-para-crear-un-proyecto/blob/master/README.md "Pasos para crear un proyecto")
+
 Hacer titilar un LED. Para realizar este ejemplo se usará el LED de la tarjeta ubicado en LD2.
 Se van a exponer dos formas de hacer titilar el LED:
 
@@ -84,9 +86,12 @@ HAL_GPIO_TogglePin(LD2_GPIO_Port,LD2_Pin)
 HAL_Delay(1000);
 }
 ~~~
+Pasos para correr el programa [Aquí](https://github.com/MarianaEstrada/Pasos-para-correr-un-proyecto/blob/master/README.md)
 
 
 ## Ejemplo 2:
+
+Pasos para la creación de un proyecto [aquí](https://github.com/MarianaEstrada/Pasos-para-crear-un-proyecto/blob/master/README.md "Pasos para crear un proyecto")
 
 Utilizando el botón ubicado en B1, cada vez que se realice una pulsación debe realizar:
 1.	Primera pulsación, encender el LED.
@@ -174,3 +179,5 @@ c=0
 }
 
 ~~~
+
+Pasos para correr el programa [Aquí](https://github.com/MarianaEstrada/Pasos-para-correr-un-proyecto/blob/master/README.md)

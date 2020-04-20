@@ -29,7 +29,7 @@ HAL_GPIO_TogglePin(GPIO_TypeDef *GPIOx, uint16_t GPIO_Pin)
 **Ejemplo:**
 
 ~~~
-	HAL_GPIO_TogglePin(LD2_GPIO_Port,LD2_Pin)
+HAL_GPIO_TogglePin(LD2_GPIO_Port,LD2_Pin)
 ~~~
  
 Para que se haga la conmutación de 1 a 0 y de 0 a 1 se debe pone dentro de un while.	
@@ -118,30 +118,33 @@ While(1)
 {
 //Dado que dependido el número de pulsaciones se realiza una acción diferente, se usará una variable “a” para determinar cuantas pulsaciones se han dado:
 //Se usará la función HAL_GPIO_ReadPin para determinar el estado de B1 donde se encuentra el pulsador.
+
 //Primero se hará un if con el fin de determinar que a=0 y que el pulsador lo hayan oprimido
 //Se utiliza el ! antes del HAL para que solo cuente cuando se haya oprimido el botón
 If ((!HAL_GPIO_ReadPin(B1_GPIO_Port,B1_Pin)) && (a==0)){
-                //Se enciende el LED;
-               HAL_GPIO_WritePin(LD2_GPIO_Port, LD2_Pin,GPIO_PIN_SET);
+//Se enciende el LED;
+HAL_GPIO_WritePin(LD2_GPIO_Port, LD2_Pin,GPIO_PIN_SET);
 a= a+1; 
 //Se realiza un retraso de 500 ms
 HAL_Delay(500);
 }
+
 //Segundo se hará un if con el fin de determinar que a=1 y que el pulsador lo hayan oprimido
 //Se utiliza el ! antes del HAL para que solo cuente cuando se haya oprimido el botón
 If ((!HAL_GPIO_ReadPin(B1_GPIO_Port,B1_Pin)) && (a==1)){
-                //Se apaga el LED;
-               HAL_GPIO_WritePin(LD2_GPIO_Port, LD2_Pin,GPIO_PIN_RESET);
+//Se apaga el LED;
+HAL_GPIO_WritePin(LD2_GPIO_Port, LD2_Pin,GPIO_PIN_RESET);
 a= a+1; 
 //Se realiza un retraso de 500 ms
 HAL_Delay(500);
 }
+
 //Tercero se hará un if con el fin de determinar que a=2 y que el pulsador lo hallan oprimido
 //Se utiliza el ! antes del HAL para que solo cuente cuando se haya oprimido el botón
 If ((!HAL_GPIO_ReadPin(B1_GPIO_Port,B1_Pin)) && (a==2)){
 //Como se mencionó en el ejemplo anterior hay dos formar de hacer titilar un LED, en este caso se usara la función Toggle este debe ser usado dentro de un while para que se pueda realizar la conmutación, por esta razón se usara la variable “b” para que se pueda salir del while cuando se vuelva a oprimir el botón.
 While (b==0){
-               HAL_GPIO_TogglePin(LD2_GPIO_Port, LD2_Pin);
+ HAL_GPIO_TogglePin(LD2_GPIO_Port, LD2_Pin);
 //Por 1000 ms
 HAL_Delay(1000);
 //Se mira si el botón a cambiado de estado.
@@ -150,6 +153,7 @@ b= b+1;
 }
 a= a+1;
 }
+
 //Finalmente se hará la letra M en código morse que equivale a dos líneas, por esto
 If ((!HAL_GPIO_ReadPin(B1_GPIO_Port,B1_Pin)) && (a==3)){
 While(c==0){

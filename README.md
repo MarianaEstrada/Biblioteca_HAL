@@ -186,7 +186,7 @@ c=0
 
 Pasos para correr el programa [Aquí](https://github.com/MarianaEstrada/Pasos-para-correr-un-proyecto/blob/master/README.md)
 
-##Máquina de estados
+## Máquina de estados
 
 Se permite modelar el comportamiento de un sistema, sabiendo todos los posibles estados de esta. El estado de la máquina es evaluado periódicamente, cada vez que se evalúa el nuevo estado es elegido junto con su salida.
 
@@ -197,7 +197,108 @@ Existes dos tipos de máquinas de estados:
 
 **Ejemplo**
 
+![MEF](https://github.com/MarianaEstrada/Biblioteca_HAL/blob/master/Imagenes/MEF.PNG)
 
+Lo que se presenta en la imagen es un cambio de estado de un LED, encendido o apagado y el cambio de este depende de si se oprime o no el pulsador.
+
+~~~
+main.h
+
+/* USER CODE BEGIN ET */
+enum states {LED_ON_DOWN, LED_ON_UP, LED_OFF_DOWN, LED_OFF_UP} current_state;
+enum inputs {PB_DOWN,PB_UP} current_input;
+/* USER CODE END ET */
+
+/* USER CODE BEGIN EFP */
+int8_t get_input(void);
+void set_output(int8_t current_state);
+/* USER CODE END EFP */
+
+main.c
+
+/* USER CODE BEGIN 2 */
+  uint8_t cuenta = 0;
+  current_state = LED_OFF_UP;
+  /* USER CODE END 2 */
+
+/* USER CODE BEGIN 3 */
+	  	//LED CONTROL 4 STATES
+	  	  current_input = get_input();
+	  	  switch(current_state)
+	  	  {
+	  	  case LED_ON_UP:
+	  		  switch(current_input)
+	  		  {
+	  		  case PB_DOWN:
+	  			  current_state = LED_ON_DOWN;
+	  			  cuenta++;
+	  			  break;
+	  		  default:
+	  			  current_state = LED_ON_UP;
+	  		  }
+	  		  break;
+	  	  case LED_ON_DOWN:
+	  		  switch(current_input)
+	  		  {
+	  		  case PB_DOWN:
+	  			  current_state = LED_ON_DOWN;
+	  			  break;
+	  		  default:
+	  			  current_state = LED_OFF_UP;
+	  		  }
+	  		  break;
+	  	  case LED_OFF_UP:
+	  		  switch(current_input)
+	  		  {
+	  		  case PB_DOWN:
+	  			  current_state = LED_OFF_DOWN;
+	  			  cuenta++;
+	  			  break;
+	  		  default:
+	  			  current_state = LED_OFF_UP;
+	  		  }
+	  		  break;
+	  	  case LED_OFF_DOWN:
+	  		  switch(current_input)
+	  		  {
+	  		  case PB_DOWN:
+	  			  current_state = LED_OFF_DOWN;
+	  			  break;
+	  		  default:
+	  			  current_state = LED_ON_UP;
+	  		  }
+	  		  break;
+	  	  }
+	  	  set_output(current_state);
+
+/* USER CODE BEGIN 4 */
+int8_t get_input(void)
+{
+	if (!HAL_GPIO_ReadPin(B1_GPIO_Port, B1_Pin))
+		return PB_DOWN;
+	else
+		return PB_UP;
+}
+
+void set_output(int8_t current_state)
+{
+	switch(current_state)
+	{
+	case LED_ON_UP:
+	case LED_ON_DOWN:
+		HAL_GPIO_WritePin(LD2_GPIO_Port, LD2_Pin, GPIO_PIN_SET);
+		break;
+	case LED_OFF_UP:
+	case LED_OFF_DOWN:
+		HAL_GPIO_WritePin(LD2_GPIO_Port, LD2_Pin, GPIO_PIN_RESET);
+		break;
+	}
+
+}
+/* USER CODE END 4 */
+
+
+~~~
 
 
 

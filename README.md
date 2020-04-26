@@ -201,6 +201,9 @@ Existes dos tipos de máquinas de estados:
 
 Lo que se presenta en la imagen es un cambio de estado de un LED, encendido o apagado y el cambio de este depende de si se oprime o no el pulsador.
 
+
+Pasos para la creación de un proyecto [aquí](https://github.com/MarianaEstrada/Pasos-para-crear-un-proyecto/blob/master/README.md "Pasos para crear un proyecto")
+
 ~~~
 main.h
 
@@ -301,6 +304,9 @@ void set_output(int8_t current_state)
 ~~~
 
 
+Pasos para correr el programa [Aquí](https://github.com/MarianaEstrada/Pasos-para-correr-un-proyecto/blob/master/README.md)
+
+Pasos para correr paso a paso el programa [Aquí](https://github.com/MarianaEstrada/Pasos-para-correr-paso-a-paso-)
 
 
 

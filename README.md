@@ -204,10 +204,15 @@ Lo que se presenta en la imagen es un cambio de estado de un LED, encendido o ap
 
 Pasos para la creación de un proyecto [aquí](https://github.com/MarianaEstrada/Pasos-para-crear-un-proyecto/blob/master/README.md "Pasos para crear un proyecto")
 
+Acontinuación se presentarán algunos códigos para evitar el rebote en los pulsadores.
+1.
+
+En C++ un tipo de dato enum permite asociar nombres con números, enumerando automáticamente cualquier lista.
 ~~~
 main.h
 
 /* USER CODE BEGIN ET */
+// Se van a crear dos variables del tipo enum, una para los estados del LED y otra para los estados del pulsador.
 enum states {LED_ON_DOWN, LED_ON_UP, LED_OFF_DOWN, LED_OFF_UP} current_state;
 enum inputs {PB_DOWN,PB_UP} current_input;
 /* USER CODE END ET */

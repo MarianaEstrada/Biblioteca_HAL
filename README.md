@@ -205,46 +205,64 @@ Lo que se presenta en la imagen es un cambio de estado de un LED, encendido o ap
 Pasos para la creación de un proyecto [aquí](https://github.com/MarianaEstrada/Pasos-para-crear-un-proyecto/blob/master/README.md "Pasos para crear un proyecto")
 
 Acontinuación se presentarán algunos códigos para evitar el rebote en los pulsadores.
-1.
 
-En C++ un tipo de dato enum permite asociar nombres con números, enumerando automáticamente cualquier lista.
+1. La primera máquina de estados que se va a usar es la siguiente:
+
+![ME2](https://github.com/MarianaEstrada/Biblioteca_HAL/blob/master/Imagenes/ME2.PNG)
+
+Esta posee cuatro estados para el LED y dos estados para el pulsador, donde los estados 2 y 4 son de transición
+
+* En el main. h del proyecto, ubicado en la carpeta Inc se pone la siguiente información:
 ~~~
-main.h
+
 
 /* USER CODE BEGIN ET */
 // Se van a crear dos variables del tipo enum, una para los estados del LED y otra para los estados del pulsador.
+// En C++ un tipo de dato enum permite asociar nombres con números, enumerando automáticamente cualquier lista.
 enum states {LED_ON_DOWN, LED_ON_UP, LED_OFF_DOWN, LED_OFF_UP} current_state;
 enum inputs {PB_DOWN,PB_UP} current_input;
 /* USER CODE END ET */
 
 /* USER CODE BEGIN EFP */
+// Se crea una variable de un tamaño fijo de 8 bits con signo
 int8_t get_input(void);
+// Se crea una función void(que no tiene atributo o declaración) llamada set_output
 void set_output(int8_t current_state);
 /* USER CODE END EFP */
-
-main.c
-
+~~~
+* En el main. c del proyecto, ubicado en la carpeta Src se pone la siguiente información:
+~~~
 /* USER CODE BEGIN 2 */
+  //Se crea una variable sin signo de 8 bits para ser usada en un contador y determinar cuantas veces ha sido oprimido el pulsador.
   uint8_t cuenta = 0;
+  // Se inicializa la variable current_state, estando aquí en la primera etapa de la maquina de estados.
   current_state = LED_OFF_UP;
   /* USER CODE END 2 */
 
 /* USER CODE BEGIN 3 */
 	  	//LED CONTROL 4 STATES
+		// La función current_imput me dirá en que estado está mi entrada UP o down esto apartir de la función get_input
 	  	  current_input = get_input();
+		  // Current_state empieza en LED_OFF_UP, porque así se declaró en el main
 	  	  switch(current_state)
 	  	  {
+		  // Si current_state es 1, esta en el primer estado de la máquina de estados
 	  	  case LED_ON_UP:
+		  \\Ahora se mira cual es el estado del pulsador, dada por la función get_input
 	  		  switch(current_input)
 	  		  {
+			  //Si el estado del pulsador es bajo,0, cambia el estado del LED a 2, es decir, a LED_ON_DOWN
 	  		  case PB_DOWN:
 	  			  current_state = LED_ON_DOWN;
+				  \\Aumentando la variable cuenta para saber cuantas veces se ha oprimido el botón
 	  			  cuenta++;
 	  			  break;
 	  		  default:
+			  \\De lo contrario el estado del LED será LED_ON_UP.
 	  			  current_state = LED_ON_UP;
 	  		  }
 	  		  break;
+	          // Se tiene la misma lógica para los casos siguintes.
 	  	  case LED_ON_DOWN:
 	  		  switch(current_input)
 	  		  {
@@ -280,7 +298,9 @@ main.c
 	  	  set_output(current_state);
 
 /* USER CODE BEGIN 4 */
+// La función get input revisa si el pulsador esta en UP o en DOWN.
 int8_t get_input(void)
+// Se pone el signo ! antes del HAL, para detectar que el pulsador fue oprimido, devolviendo un 0.
 {
 	if (!HAL_GPIO_ReadPin(B1_GPIO_Port, B1_Pin))
 		return PB_DOWN;
@@ -289,13 +309,17 @@ int8_t get_input(void)
 }
 
 void set_output(int8_t current_state)
+\\La función set_output me define si se debe prender o apagar el LED, según el estado del pulsador.
 {
 	switch(current_state)
 	{
+	\\Si se esta en los dos primeros estados de la máquina de estados, el LED se encenderá.
 	case LED_ON_UP:
 	case LED_ON_DOWN:
 		HAL_GPIO_WritePin(LD2_GPIO_Port, LD2_Pin, GPIO_PIN_SET);
 		break;
+		
+	\\De lo contrarió el LED estará apagado.
 	case LED_OFF_UP:
 	case LED_OFF_DOWN:
 		HAL_GPIO_WritePin(LD2_GPIO_Port, LD2_Pin, GPIO_PIN_RESET);

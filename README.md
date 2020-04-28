@@ -338,4 +338,482 @@ Pasos para correr el programa [Aquí](https://github.com/MarianaEstrada/Pasos-pa
 Pasos para correr paso a paso el programa [Aquí](https://github.com/MarianaEstrada/Pasos-para-correr-paso-a-paso-)
 
 
+2. Otra forma de realizar máquinas de estado es aplicando tablas, acontinuación se presentará otra forma de realizar el ejemplo anterior.
 
+* En el main. h del proyecto, ubicado en la carpeta Inc se pone la siguiente información:
+~~~
+
+
+/* USER CODE BEGIN ET */
+// Se van a crear dos variables del tipo enum, una para los estados del LED y otra para los estados del pulsador.
+// En C++ un tipo de dato enum permite asociar nombres con números, enumerando automáticamente cualquier lista.
+enum states {LED_ON_DOWN, LED_ON_UP, LED_OFF_DOWN, LED_OFF_UP} current_state;
+enum inputs {PB_DOWN,PB_UP} current_input;
+/* USER CODE END ET */
+
+/* USER CODE BEGIN EFP */
+// Se crea una variable de un tamaño fijo de 8 bits con signo, para determinar en que posición está el botón
+int8_t get_input(void);
+/* USER CODE END EFP */
+~~~
+
+* En el main. c del proyecto, ubicado en la carpeta Src se pone la siguiente información:
+
+~~~
+/
+/* USER CODE BEGIN Includes */
+//Se van a definir dos variables las cuales tendrán como valor la cantidad de estados que hay para el LED y para el pulsador.
+#define MAX_CURRENT_STATE 4
+#define MAX_CURRENT_INPUT 2
+typedef void (*transition)();
+/* USER CODE END Includes */
+
+/* USER CODE BEGIN 0 */
+
+//Cuando se está en los dos primeros estados el LED se va a encender
+void LED_1(void){
+	HAL_GPIO_WritePin(LD2_GPIO_Port, LD2_Pin, GPIO_PIN_SET);
+}
+//Mientras que cuando está en los otros dos estados el estará apagado.
+void LED_2(void)
+{
+	HAL_GPIO_WritePin(LD2_GPIO_Port, LD2_Pin, GPIO_PIN_RESET);
+}
+
+//Estas funciones me permiten moverme dentro de la tabla de estados.
+void PB_1(void)
+{
+current_state=LED_OFF_UP;
+cuenta++;
+}
+
+void PB_2(void)
+{
+current_state=LED_ON_DOWN;
+}
+
+void PB_3(void)
+{
+current_state=LED_ON_UP;
+}
+
+void PB_4(void)
+{
+current_state=LED_OFF_DOWN;
+}
+
+//La tabla de estados se refiere a el estado donde se encuentra PB_1... y decir si el LED se enciende o se apaga
+transition state_table[MAX_CURRENT_STATE][MAX_CURRENT_INPUT]={
+//PULSADOR ARRIBA PB1
+{LED_1,PB_1},
+{LED_1,PB_2},
+{LED_2, PB_3},
+{LED_2, PB_4}} ;
+
+
+/* USER CODE END 0 */
+// Se inicializa el estado acutual en el tercer estado LED_OFF_UP
+  /* USER CODE BEGIN 2 */
+  current_state = LED_OFF_UP ;
+  /* USER CODE END 2 */
+
+    while (1)
+  {
+    /* USER CODE END WHILE */
+         // Se lee el estado de la entrada con la función get_input
+	  current_input = get_input();
+          // Se va a la tabla de eestados para ejecutar lo pedido 
+	  if ((current_input>= 0 ) && (current_input < MAX_CURRENT_INPUT)
+			  && (current_state >= 0) && (current_state < MAX_CURRENT_STATE))
+			  {
+	  state_table[current_state][current_input]();
+	  }
+
+  }
+  /* USER CODE END 3 */
+}
+
+/* USER CODE BEGIn 4 */
+int8_t get_input(void)
+// Se pone el signo ! antes del HAL, para detectar que el pulsador fue oprimido, devolviendo un 0.
+{
+	if (!HAL_GPIO_ReadPin(B1_GPIO_Port, B1_Pin)){
+
+		return PB_DOWN;
+	}else{
+		return PB_UP;
+
+	}
+}
+
+
+
+
+/* USER CODE END 4 */
+
+
+~~~
+
+3. Circuito antirrebote
+
+~~~
+/* USER CODE BEGIN Header */
+/**
+  ******************************************************************************
+  * @file           : main.c
+  * @brief          : Main program body
+  ******************************************************************************
+  * @attention
+  *
+  * <h2><center>&copy; Copyright (c) 2020 STMicroelectronics.
+  * All rights reserved.</center></h2>
+  *
+  * This software component is licensed by ST under BSD 3-Clause license,
+  * the "License"; You may not use this file except in compliance with the
+  * License. You may obtain a copy of the License at:
+  *                        opensource.org/licenses/BSD-3-Clause
+  *
+  ******************************************************************************
+  */
+/* USER CODE END Header */
+
+/* Includes ------------------------------------------------------------------*/
+#include "main.h"
+
+/* Private includes ----------------------------------------------------------*/
+/* USER CODE BEGIN Includes */
+uint8_t aprobacion=0;
+uint8_t estado_led=0;
+uint64_t tick_time;
+#define MAX_CURRENT_STATE 5
+#define MAX_CURRENT_INPUT 2
+/* USER CODE END Includes */
+
+/* Private typedef -----------------------------------------------------------*/
+/* USER CODE BEGIN PTD */
+
+/* USER CODE END PTD */
+
+/* Private define ------------------------------------------------------------*/
+/* USER CODE BEGIN PD */
+/* USER CODE END PD */
+
+/* Private macro -------------------------------------------------------------*/
+/* USER CODE BEGIN PM */
+
+/* USER CODE END PM */
+
+/* Private variables ---------------------------------------------------------*/
+UART_HandleTypeDef huart2;
+
+/* USER CODE BEGIN PV */
+
+/* USER CODE END PV */
+
+/* Private function prototypes -----------------------------------------------*/
+void SystemClock_Config(void);
+static void MX_GPIO_Init(void);
+static void MX_USART2_UART_Init(void);
+/* USER CODE BEGIN PFP */
+
+/* USER CODE END PFP */
+
+/* Private user code ---------------------------------------------------------*/
+/* USER CODE BEGIN 0 */
+
+void STATE_1(void){
+	//Estado inicio
+	HAL_GPIO_WritePin(LD2_GPIO_Port, LD2_Pin, GPIO_PIN_RESET);
+}
+
+void STATE_2(void){
+
+	{}
+}
+
+void STATE_3(void){
+	current_input=get_imput();
+	if(current_input=PB_DOWN && tick_time==10000){
+	aprobacion=1;
+
+	}
+}
+
+void STATE_4(void){
+
+	if( aprobacion=1){
+	   estado_led= HAL_GPIO_ReadPin(LD2_GPIO_Port, LD2_Pin);
+	   if(estado_led=1){
+	HAL_GPIO_WritePin(LD2_GPIO_Port, LD2_Pin, GPIO_PIN_RESET);
+	   }else{
+		   HAL_GPIO_WritePin(LD2_GPIO_Port, LD2_Pin, GPIO_PIN_SET);
+	   }
+	}
+}
+
+void STATE_5(void){
+	aprobacion=0 ;
+	tick_time=0;
+}
+
+
+void PB_1(void)
+{
+current_state=STATE_2;
+}
+
+void PB_2(void)
+{
+current_state=STATE_3;
+}
+
+void PB_3(void)
+{
+current_state=STATE_4;
+}
+
+void PB_4(void)
+{
+current_state=STATE_5;
+}
+
+void PB_4(void)
+{
+current_state=STATE_1;
+}
+
+
+transition state_table[MAX_CURRENT_STATE][MAX_CURRENT_INPUT]={
+//PULSADOR ARRIBA PB1
+{STATE_1,PB_1},
+{STATE_2,PB_2},
+{STATE_3, PB_3},
+{STATE_4, PB_4},
+{STATE_5, PB_4}} ;
+/* USER CODE END 0 */
+
+/**
+  * @brief  The application entry point.
+  * @retval int
+  */
+int main(void)
+{
+  /* USER CODE BEGIN 1 */
+
+  /* USER CODE END 1 */
+
+  /* MCU Configuration--------------------------------------------------------*/
+
+  /* Reset of all peripherals, Initializes the Flash interface and the Systick. */
+  HAL_Init();
+
+  /* USER CODE BEGIN Init */
+
+  /* USER CODE END Init */
+
+  /* Configure the system clock */
+  SystemClock_Config();
+
+  /* USER CODE BEGIN SysInit */
+
+  /* USER CODE END SysInit */
+
+  /* Initialize all configured peripherals */
+  MX_GPIO_Init();
+  MX_USART2_UART_Init();
+  /* USER CODE BEGIN 2 */
+  current_state=Inicio;
+  /* USER CODE END 2 */
+
+  /* Infinite loop */
+  /* USER CODE BEGIN WHILE */
+  while (1)
+  {
+    /* USER CODE END WHILE */
+
+     state_table[current_state][current_input]();
+
+
+
+    /* USER CODE BEGIN 3 */
+  }
+  /* USER CODE END 3 */
+}
+
+/**
+  * @brief System Clock Configuration
+  * @retval None
+  */
+void SystemClock_Config(void)
+{
+  RCC_OscInitTypeDef RCC_OscInitStruct = {0};
+  RCC_ClkInitTypeDef RCC_ClkInitStruct = {0};
+  RCC_PeriphCLKInitTypeDef PeriphClkInit = {0};
+
+  /** Initializes the CPU, AHB and APB busses clocks 
+  */
+  RCC_OscInitStruct.OscillatorType = RCC_OSCILLATORTYPE_HSI;
+  RCC_OscInitStruct.HSIState = RCC_HSI_ON;
+  RCC_OscInitStruct.HSICalibrationValue = RCC_HSICALIBRATION_DEFAULT;
+  RCC_OscInitStruct.PLL.PLLState = RCC_PLL_ON;
+  RCC_OscInitStruct.PLL.PLLSource = RCC_PLLSOURCE_HSI;
+  RCC_OscInitStruct.PLL.PLLM = 1;
+  RCC_OscInitStruct.PLL.PLLN = 10;
+  RCC_OscInitStruct.PLL.PLLP = RCC_PLLP_DIV7;
+  RCC_OscInitStruct.PLL.PLLQ = RCC_PLLQ_DIV2;
+  RCC_OscInitStruct.PLL.PLLR = RCC_PLLR_DIV2;
+  if (HAL_RCC_OscConfig(&RCC_OscInitStruct) != HAL_OK)
+  {
+    Error_Handler();
+  }
+  /** Initializes the CPU, AHB and APB busses clocks 
+  */
+  RCC_ClkInitStruct.ClockType = RCC_CLOCKTYPE_HCLK|RCC_CLOCKTYPE_SYSCLK
+                              |RCC_CLOCKTYPE_PCLK1|RCC_CLOCKTYPE_PCLK2;
+  RCC_ClkInitStruct.SYSCLKSource = RCC_SYSCLKSOURCE_PLLCLK;
+  RCC_ClkInitStruct.AHBCLKDivider = RCC_SYSCLK_DIV1;
+  RCC_ClkInitStruct.APB1CLKDivider = RCC_HCLK_DIV1;
+  RCC_ClkInitStruct.APB2CLKDivider = RCC_HCLK_DIV1;
+
+  if (HAL_RCC_ClockConfig(&RCC_ClkInitStruct, FLASH_LATENCY_4) != HAL_OK)
+  {
+    Error_Handler();
+  }
+  PeriphClkInit.PeriphClockSelection = RCC_PERIPHCLK_USART2;
+  PeriphClkInit.Usart2ClockSelection = RCC_USART2CLKSOURCE_PCLK1;
+  if (HAL_RCCEx_PeriphCLKConfig(&PeriphClkInit) != HAL_OK)
+  {
+    Error_Handler();
+  }
+  /** Configure the main internal regulator output voltage 
+  */
+  if (HAL_PWREx_ControlVoltageScaling(PWR_REGULATOR_VOLTAGE_SCALE1) != HAL_OK)
+  {
+    Error_Handler();
+  }
+}
+
+/**
+  * @brief USART2 Initialization Function
+  * @param None
+  * @retval None
+  */
+static void MX_USART2_UART_Init(void)
+{
+
+  /* USER CODE BEGIN USART2_Init 0 */
+
+  /* USER CODE END USART2_Init 0 */
+
+  /* USER CODE BEGIN USART2_Init 1 */
+
+  /* USER CODE END USART2_Init 1 */
+  huart2.Instance = USART2;
+  huart2.Init.BaudRate = 115200;
+  huart2.Init.WordLength = UART_WORDLENGTH_8B;
+  huart2.Init.StopBits = UART_STOPBITS_1;
+  huart2.Init.Parity = UART_PARITY_NONE;
+  huart2.Init.Mode = UART_MODE_TX_RX;
+  huart2.Init.HwFlowCtl = UART_HWCONTROL_NONE;
+  huart2.Init.OverSampling = UART_OVERSAMPLING_16;
+  huart2.Init.OneBitSampling = UART_ONE_BIT_SAMPLE_DISABLE;
+  huart2.AdvancedInit.AdvFeatureInit = UART_ADVFEATURE_NO_INIT;
+  if (HAL_UART_Init(&huart2) != HAL_OK)
+  {
+    Error_Handler();
+  }
+  /* USER CODE BEGIN USART2_Init 2 */
+
+  /* USER CODE END USART2_Init 2 */
+
+}
+
+/**
+  * @brief GPIO Initialization Function
+  * @param None
+  * @retval None
+  */
+static void MX_GPIO_Init(void)
+{
+  GPIO_InitTypeDef GPIO_InitStruct = {0};
+
+  /* GPIO Ports Clock Enable */
+  __HAL_RCC_GPIOC_CLK_ENABLE();
+  __HAL_RCC_GPIOH_CLK_ENABLE();
+  __HAL_RCC_GPIOA_CLK_ENABLE();
+  __HAL_RCC_GPIOB_CLK_ENABLE();
+
+  /*Configure GPIO pin Output Level */
+  HAL_GPIO_WritePin(LD2_GPIO_Port, LD2_Pin, GPIO_PIN_RESET);
+
+  /*Configure GPIO pin : B1_Pin */
+  GPIO_InitStruct.Pin = B1_Pin;
+  GPIO_InitStruct.Mode = GPIO_MODE_IT_FALLING;
+  GPIO_InitStruct.Pull = GPIO_NOPULL;
+  HAL_GPIO_Init(B1_GPIO_Port, &GPIO_InitStruct);
+
+  /*Configure GPIO pin : LD2_Pin */
+  GPIO_InitStruct.Pin = LD2_Pin;
+  GPIO_InitStruct.Mode = GPIO_MODE_OUTPUT_PP;
+  GPIO_InitStruct.Pull = GPIO_NOPULL;
+  GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_LOW;
+  HAL_GPIO_Init(LD2_GPIO_Port, &GPIO_InitStruct);
+
+}
+
+/* USER CODE BEGIN 4 */
+int8_t get_input(void)
+// Se pone el signo ! antes del HAL, para detectar que el pulsador fue oprimido, devolviendo un 0.
+{
+	if (!HAL_GPIO_ReadPin(B1_GPIO_Port, B1_Pin)){
+		cuenta ++;
+		return PB_DOWN;
+	}else{
+		return PB_UP;
+
+	}
+}
+
+/* USER CODE END 4 */
+
+/**
+  * @brief  This function is executed in case of error occurrence.
+  * @retval None
+  */
+void Error_Handler(void)
+{
+  /* USER CODE BEGIN Error_Handler_Debug */
+  /* User can add his own implementation to report the HAL error return state */
+
+  /* USER CODE END Error_Handler_Debug */
+}
+
+#ifdef  USE_FULL_ASSERT
+/**
+  * @brief  Reports the name of the source file and the source line number
+  *         where the assert_param error has occurred.
+  * @param  file: pointer to the source file name
+  * @param  line: assert_param error line source number
+  * @retval None
+  */
+void assert_failed(uint8_t *file, uint32_t line)
+{ 
+  /* USER CODE BEGIN 6 */
+  /* User can add his own implementation to report the file name and line number,
+     tex: printf("Wrong parameters value: file %s on line %d\r\n", file, line) */
+  /* USER CODE END 6 */
+}
+#endif /* USE_FULL_ASSERT */
+
+/************************ (C) COPYRIGHT STMicroelectronics *****END OF FILE****/
+
+
+~~~
+
+
+
+
+
+Pasos para correr el programa [Aquí](https://github.com/MarianaEstrada/Pasos-para-correr-un-proyecto/blob/master/README.md)
+
+Pasos para correr paso a paso el programa [Aquí](https://github.com/MarianaEstrada/Pasos-para-correr-paso-a-paso-)

@@ -451,7 +451,7 @@ Pasos para correr paso a paso el programa [Aquí](https://github.com/MarianaEstr
 
 Para este programa se va a usar la siguiente máquina de estados:
 
-![MEF3](https://github.com/MarianaEstrada/Biblioteca_HAL/blob/master/Imagenes/MEF3.PNG)
+![ME3](https://github.com/MarianaEstrada/Biblioteca_HAL/blob/master/Imagenes/ME3.PNG)
 
 Esta máquina de estados lo que busca es que la pulsación solo se cuente cada vez que sea mayor a 10ms. Acontinuación se presenta el código usado:
 

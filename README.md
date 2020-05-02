@@ -354,6 +354,9 @@ enum inputs {PB_DOWN,PB_UP} current_input;
 /* USER CODE BEGIN EFP */
 // Se crea una variable de un tamaño fijo de 8 bits con signo, para determinar en que posición está el botón
 int8_t get_input(void);
+//Las funciones ciclo1 y ciclo2 me permiten realizar los cambios del current_state debido a los current_input
+void ciclo1 (void);
+void ciclo2(void);
 /* USER CODE END EFP */
 ~~~
 
@@ -362,97 +365,87 @@ int8_t get_input(void);
 ~~~
 /
 /* USER CODE BEGIN Includes */
-//Se van a definir dos variables las cuales tendrán como valor la cantidad de estados que hay para el LED y para el pulsador.
+//Se van a definir dos variables las cuales tendrán como valor la cantidad de estados que hay para el LED (4) y para el pulsador (2).
 #define MAX_CURRENT_STATE 4
 #define MAX_CURRENT_INPUT 2
+Se crea la tabla de estados que va a ser usada.
 typedef void (*transition)();
 /* USER CODE END Includes */
 
+//Se crea la tabla de estados 
 /* USER CODE BEGIN 0 */
 
-//Cuando se está en los dos primeros estados el LED se va a encender
-void LED_1(void){
-	HAL_GPIO_WritePin(LD2_GPIO_Port, LD2_Pin, GPIO_PIN_SET);
-}
-//Mientras que cuando está en los otros dos estados el estará apagado.
-void LED_2(void)
-{
-	HAL_GPIO_WritePin(LD2_GPIO_Port, LD2_Pin, GPIO_PIN_RESET);
-}
-
-//Estas funciones me permiten moverme dentro de la tabla de estados.
-void PB_1(void)
-{
-current_state=LED_OFF_UP;
-cuenta++;
-}
-
-void PB_2(void)
-{
-current_state=LED_ON_DOWN;
-}
-
-void PB_3(void)
-{
-current_state=LED_ON_UP;
-}
-
-void PB_4(void)
-{
-current_state=LED_OFF_DOWN;
-}
-
-//La tabla de estados se refiere a el estado donde se encuentra PB_1... y decir si el LED se enciende o se apaga
-transition state_table[MAX_CURRENT_STATE][MAX_CURRENT_INPUT]={
-//PULSADOR ARRIBA PB1
-{LED_1,PB_1},
-{LED_1,PB_2},
-{LED_2, PB_3},
-{LED_2, PB_4}} ;
-
+transition state_table[MAX_STATES][MAX_EVENTS] = {
+//		PB_DOWN		PB_UP
+		{ciclo1,ciclo2},	// LED_ON_UP
+		{ciclo1,ciclo2},	// LED_ON_DOWN
+		{ciclo1, ciclo2},	// LED_OFF_UP
+		{ciclo1, ciclo2}};	// LED_OFF_DOWN
 
 /* USER CODE END 0 */
-// Se inicializa el estado acutual en el tercer estado LED_OFF_UP
-  /* USER CODE BEGIN 2 */
-  current_state = LED_OFF_UP ;
-  /* USER CODE END 2 */
 
-    while (1)
+//Se inicializa la variable current_state en el estado 3 del LED
+/* USER CODE BEGIN 2 */
+current_state = LED_OFF_UP;
+/* USER CODE END 2 */
+
+//Se crea el ciclo while para que se pueda mover dentro de ola tabla de estados dependiendo del estado del pulsador y del LED
+ while (1)
   {
-    /* USER CODE END WHILE */
-         // Se lee el estado de la entrada con la función get_input
+  //La variable current_ state depende de la función get_input que se encarga de valor si el pulsador está Down o Up
 	  current_input = get_input();
-          // Se va a la tabla de eestados para ejecutar lo pedido 
-	  if ((current_input>= 0 ) && (current_input < MAX_CURRENT_INPUT)
-			  && (current_state >= 0) && (current_state < MAX_CURRENT_STATE))
-			  {
-	  state_table[current_state][current_input]();
+	  if( current_input>=0 && current_input <= MAX_EVENTS &&
+	  	  current_state >= 0 && current_state <= MAX_STATES){
+		  state_table[current_state][current_input]();
 	  }
-
-  }
-  /* USER CODE END 3 */
+     }
 }
 
-/* USER CODE BEGIn 4 */
+/* USER CODE BEGIN 4 */
+// La función get input revisa si el pulsador esta en UP o en DOWN.
 int8_t get_input(void)
 // Se pone el signo ! antes del HAL, para detectar que el pulsador fue oprimido, devolviendo un 0.
 {
 	if (!HAL_GPIO_ReadPin(B1_GPIO_Port, B1_Pin)){
-
 		return PB_DOWN;
 	}else{
 		return PB_UP;
+	}
+}
 
+//En ciclo 1 sirve cuando el pulsador esta en down haciendo los cambios de estado correspondiente
+void ciclo1(){
+
+	if (current_input == PB_DOWN){
+		if (current_state == LED_ON_UP){
+			current_state = LED_ON_DOWN;
+			}else if (current_state == LED_OFF_UP){
+			current_state= LED_OFF_DOWN;
+		    }
 	}
 }
 
 
+//En ciclo 1 sirve cuando el pulsador esta en UP haciendo los cambios de estado correspondiente
+void ciclo2(){
 
+	if (current_input == PB_UP){
+		if(current_state == LED_ON_DOWN){
+			current_state = LED_OFF_UP;
+			HAL_GPIO_WritePin(LD2_GPIO_Port, LD2_Pin, RESET);
+		}else if (current_state == LED_OFF_DOWN){
+			current_state = LED_ON_UP;
+			HAL_GPIO_WritePin(LD2_GPIO_Port, LD2_Pin, SET);
+		}
+	}
+
+}
 
 /* USER CODE END 4 */
-
-
 ~~~
+Pasos para correr el programa [Aquí](https://github.com/MarianaEstrada/Pasos-para-correr-un-proyecto/blob/master/README.md)
+
+Pasos para correr paso a paso el programa [Aquí](https://github.com/MarianaEstrada/Pasos-para-correr-paso-a-paso-)
 
 3. Circuito antirrebote
 

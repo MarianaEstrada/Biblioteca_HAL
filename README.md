@@ -204,9 +204,11 @@ Lo que se presenta en la imagen es un cambio de estado de un LED, encendido o ap
 
 Pasos para la creación de un proyecto [aquí](https://github.com/MarianaEstrada/Pasos-para-crear-un-proyecto/blob/master/README.md "Pasos para crear un proyecto")
 
-Acontinuación se presentarán algunos códigos para evitar el rebote en los pulsadores.
+Acontinuación se presentan algunos ejemplos de máquina de estados:
 
-1. La primera máquina de estados que se va a usar es la siguiente:
+## Antirrebote
+
+### 1. La primera máquina de estados que se va a usar es la siguiente:
 
 ![ME2](https://github.com/MarianaEstrada/Biblioteca_HAL/blob/master/Imagenes/ME2.PNG)
 
@@ -338,7 +340,7 @@ Pasos para correr el programa [Aquí](https://github.com/MarianaEstrada/Pasos-pa
 Pasos para correr paso a paso el programa [Aquí](https://github.com/MarianaEstrada/Pasos-para-correr-paso-a-paso-)
 
 
-2. Otra forma de realizar máquinas de estado es aplicando tablas, acontinuación se presentará otra forma de realizar el ejemplo anterior.
+### 2. Otra forma de realizar máquinas de estado es aplicando tablas, acontinuación se presentará otra forma de realizar el ejemplo anterior.
 
 * En el main. h del proyecto, ubicado en la carpeta Inc se pone la siguiente información:
 ~~~
@@ -447,17 +449,148 @@ Pasos para correr el programa [Aquí](https://github.com/MarianaEstrada/Pasos-pa
 
 Pasos para correr paso a paso el programa [Aquí](https://github.com/MarianaEstrada/Pasos-para-correr-paso-a-paso-)
 
-3. Circuito antirrebote
+### 3. Otra forma de hacer el antirrebote
 
 Para este programa se va a usar la siguiente máquina de estados:
 
+![ME3](https://github.com/MarianaEstrada/Biblioteca_HAL/blob/master/Imagenes/ME3.PNG)
 
+Esta máquina de estados lo que busca es que la pulsación solo se cuente cada vez que sea mayor a 10ms. Acontinuación se presenta el código usado:
+
+* En la carpeta stm32l4xx_it.c se pone lo siguiente:
+~~~
+void SysTick_Handler(void)
+{
+  /* USER CODE BEGIN SysTick_IRQn 0 */
+  tick_time ++;
+  /* USER CODE END SysTick_IRQn 0 */
+  HAL_IncTick();
+  /* USER CODE BEGIN SysTick_IRQn 1 */
+
+  /* USER CODE END SysTick_IRQn 1 */
+}
 ~~~
 
+* En el main.h se pone lo siguiente:
+
+~~~
+/* USER CODE BEGIN ET */
+// Se van a crear dos datos tipo emun uno para los estados y el otro para las transiciones
+enum states {espera,detectado,liberacion,actualizacion} current_state;
+enum events {tick_e,no_tick_e}current_event;
+/* USER CODE END ET */
+
+// Ahora se van a crear las funciones que van a ser usadas a lo largo del programa:
+uint64_t tick_time;
+int8_t f_espera (void);
+void f_detectado (void);
+void f_liberacion (void);
+void f_actualizacion (void);
+void f_error (void);
 ~~~
 
+* En el main.c se pone lo siguiente :
+
+~~~
+/* USER CODE BEGIN Includes */
+//Se determinan las dimensiones de la tabla de estados
+#define MAX_STATES 4
+#define MAX_EVENTS 2
+//Se crean dos varibles contador(cuenta el número de pulsaciones) y tiempog (me va a permitir determinar los 10ms)
+int contador=0;
+int8_t tiempog=0;
+//Se crea la tabla de estados que va a ser usada.
+typedef void (*transition)();
+/* USER CODE END Includes */
+
+/* USER CODE BEGIN 0 */
+//Se crea la tabla de transición de estados.
+transition state_table[MAX_STATES][MAX_EVENTS] = {
+//		TICK_E	NO_TICK_E
+		{f_detectado,f_error},	// ESPERA
+		{f_detectado,f_espera},	// DETECTADO
+		{f_liberacion, f_error},	// LIBERACION
+		{f_actualizacion, f_error}};	// ACTUALIZACION
+/* USER CODE END 0 */
+
+  //Se inicializa con el estado espera
+  /* USER CODE BEGIN 2 */
+  current_state= espera;
+  /* USER CODE END 2 */
 
 
+ while (1)
+  {
+    /* USER CODE END WHILE */
+	  
+	  
+      //Current event toma el valor que le duvuelve la función f_espera para saber si se está en tick_e o en no_tick_e
+	  current_event = f_espera() ;
+	  if( current_event>=0 && current_event <= MAX_EVENTS &&
+	  	 current_state >= 0 && current_state <= MAX_STATES){
+	  	 state_table[current_state][current_event]();
+    /* USER CODE BEGIN 3 */
+       }
+  /* USER CODE END 3 */
+
+  }
+}
+
+//Finalmente se crean las funciones que son llamadas desde laa tabla de estados
+/* USER CODE BEGIN 4 */
+
+void f_error(void){
+	current_state=espera;
+}
+
+int8_t f_espera (void){
+
+	// Se pone el signo ! antes del HAL, para detectar que el pulsador fue oprimido, devolviendo un 0.
+	    if (!HAL_GPIO_ReadPin(B1_GPIO_Port, B1_Pin)){
+	    	return tick_e;
+		}else{
+			return no_tick_e;
+		}
+}
+
+
+void f_detectado (void){
+
+	//Se hace el conteo de los 10ms, dado que no se puede modificar la variable tick_time se hace una resta con una variable que se cambia constantemente
+	if((tick_time-tiempog)>=10){
+	tiempog=tick_time;
+	contador++;
+	current_state=liberacion;
+
+	}else{
+	tiempog=tick_time;
+	current_state=espera;
+	current_event= no_tick_e;
+
+	}
+}
+
+void f_liberacion (void){
+
+	if(HAL_GPIO_ReadPin(B1_GPIO_Port, B1_Pin)){
+
+	current_state= actualizacion ;
+
+	}
+}
+
+void f_actualizacion (void){
+	current_state=espera;
+}
+
+/* USER CODE END 4 */
+
+~~~
+Pasos para correr el programa [Aquí](https://github.com/MarianaEstrada/Pasos-para-correr-un-proyecto/blob/master/README.md)
+
+Pasos para correr paso a paso el programa [Aquí](https://github.com/MarianaEstrada/Pasos-para-correr-paso-a-paso-)
+
+### Dimmer
 
 
 Pasos para correr el programa [Aquí](https://github.com/MarianaEstrada/Pasos-para-correr-un-proyecto/blob/master/README.md)

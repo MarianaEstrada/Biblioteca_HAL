@@ -204,7 +204,9 @@ Lo que se presenta en la imagen es un cambio de estado de un LED, encendido o ap
 
 Pasos para la creación de un proyecto [aquí](https://github.com/MarianaEstrada/Pasos-para-crear-un-proyecto/blob/master/README.md "Pasos para crear un proyecto")
 
-Acontinuación se presentarán algunos códigos para evitar el rebote en los pulsadores.
+Acontinuación se presentan algunos ejemplos de máquina de estados:
+
+## Antirrebote
 
 1. La primera máquina de estados que se va a usar es la siguiente:
 
@@ -587,7 +589,8 @@ void f_actualizacion (void){
 Pasos para correr el programa [Aquí](https://github.com/MarianaEstrada/Pasos-para-correr-un-proyecto/blob/master/README.md)
 
 Pasos para correr paso a paso el programa [Aquí](https://github.com/MarianaEstrada/Pasos-para-correr-paso-a-paso-)
-4. Dimmer
+
+### Dimmer
 
 
 Pasos para correr el programa [Aquí](https://github.com/MarianaEstrada/Pasos-para-correr-un-proyecto/blob/master/README.md)

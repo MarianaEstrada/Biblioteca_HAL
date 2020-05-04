@@ -583,15 +583,11 @@ void f_actualizacion (void){
 
 /* USER CODE END 4 */
 
-
-
-
-
-
-
 ~~~
+Pasos para correr el programa [Aquí](https://github.com/MarianaEstrada/Pasos-para-correr-un-proyecto/blob/master/README.md)
 
-
+Pasos para correr paso a paso el programa [Aquí](https://github.com/MarianaEstrada/Pasos-para-correr-paso-a-paso-)
+4. Dimmer
 
 
 Pasos para correr el programa [Aquí](https://github.com/MarianaEstrada/Pasos-para-correr-un-proyecto/blob/master/README.md)

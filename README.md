@@ -592,6 +592,32 @@ Pasos para correr paso a paso el programa [Aquí](https://github.com/MarianaEstr
 
 ### Dimmer
 
+A continuación se presenta la máaquina de estados que va a ser usada:
+
+![ME4](https://github.com/MarianaEstrada/Biblioteca_HAL/blob/master/Imagenes/ME4.PNG)
+
+* Primero se debe configurar el timer, de la siguiente forma:
+
+1. En el ioc del proyecto se va la sección Timer.
+
+![paso1T](https://github.com/MarianaEstrada/Biblioteca_HAL/blob/master/Imagenes/paso1T.PNG)
+
+2. Se selecciona el timer que se va a usar, posteriormente en la ventana que aparece se selecciona el canal y se pone la opcion PWM Generation
+
+![paso2T](https://github.com/MarianaEstrada/Biblioteca_HAL/blob/master/Imagenes/paso2T.PNG)
+
+3. En la casilla configuración se selecciona GPIO SETTINGS y en la opción GPIO Pull-Up/Pull-Down se pone la opción Pull-up.
+
+![paso3T](https://github.com/MarianaEstrada/Biblioteca_HAL/blob/master/Imagenes/paso3T.PNG)
+
+4. En la casilla cofiguraciones se selecciona PARAMETER SETTINGS y se configura el valor el prescaler y conter period
+
+![paso4T](https://github.com/MarianaEstrada/Biblioteca_HAL/blob/master/Imagenes/paso4T.PNG)
+
+5. Finalmente se le da clic al siguiente icono:
+
+![paso5T](https://github.com/MarianaEstrada/Biblioteca_HAL/blob/master/Imagenes/paso5T.PNG)
+
 
 Pasos para correr el programa [Aquí](https://github.com/MarianaEstrada/Pasos-para-correr-un-proyecto/blob/master/README.md)
 

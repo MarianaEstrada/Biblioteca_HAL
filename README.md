@@ -208,7 +208,7 @@ Acontinuación se presentan algunos ejemplos de máquina de estados:
 
 ## Antirrebote
 
-1. La primera máquina de estados que se va a usar es la siguiente:
+### 1. La primera máquina de estados que se va a usar es la siguiente:
 
 ![ME2](https://github.com/MarianaEstrada/Biblioteca_HAL/blob/master/Imagenes/ME2.PNG)
 
@@ -340,7 +340,7 @@ Pasos para correr el programa [Aquí](https://github.com/MarianaEstrada/Pasos-pa
 Pasos para correr paso a paso el programa [Aquí](https://github.com/MarianaEstrada/Pasos-para-correr-paso-a-paso-)
 
 
-2. Otra forma de realizar máquinas de estado es aplicando tablas, acontinuación se presentará otra forma de realizar el ejemplo anterior.
+### 2. Otra forma de realizar máquinas de estado es aplicando tablas, acontinuación se presentará otra forma de realizar el ejemplo anterior.
 
 * En el main. h del proyecto, ubicado en la carpeta Inc se pone la siguiente información:
 ~~~
@@ -449,7 +449,7 @@ Pasos para correr el programa [Aquí](https://github.com/MarianaEstrada/Pasos-pa
 
 Pasos para correr paso a paso el programa [Aquí](https://github.com/MarianaEstrada/Pasos-para-correr-paso-a-paso-)
 
-3. Circuito antirrebote
+### 3. Otra forma de hacer el antirrebote
 
 Para este programa se va a usar la siguiente máquina de estados:
 

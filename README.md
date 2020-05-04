@@ -618,7 +618,250 @@ A continuación se presenta la máaquina de estados que va a ser usada:
 
 ![paso5T](https://github.com/MarianaEstrada/Biblioteca_HAL/blob/master/Imagenes/paso5T.PNG)
 
+Ahora se añaden los siguientes segmentos de código:
 
+
+* En la carpeta stm32l4xx_it.c se pone lo siguiente:
+~~~
+void SysTick_Handler(void)
+{
+  /* USER CODE BEGIN SysTick_IRQn 0 */
+  tick_time ++;
+  /* USER CODE END SysTick_IRQn 0 */
+  HAL_IncTick();
+  /* USER CODE BEGIN SysTick_IRQn 1 */
+
+  /* USER CODE END SysTick_IRQn 1 */
+}
+~~~
+
+
+* El el main h
+
+
+~~~
+/* USER CODE BEGIN ET */
+// Se van a crear cuatro datos tipo enum, los primeros dos son para el antirrebote y los últimos para el dimmer
+enum states {espera,detectado,liberacion,actualizacion} current_state;
+enum events {tick_e,no_tick_e}current_event;
+enum states2{apagado,atenuado,encendido}current_state_2;
+enum events2 {touch}current_event_2;
+/* USER CODE END ET */
+
+// Ahora se van a crear las funciones que van a ser usadas a lo largo del programa:
+uint64_t tick_time;
+int8_t f_espera (void);
+void f_detectado (void);
+void f_liberacion (void);
+void f_actualizacion (void);
+void f_error (void);
+void  f_apagado  (void);
+void f_atenuado (void);
+void f_encendido (void);
+/* USER CODE END EFP */
+
+
+~~~
+
+* En el main c
+
+~~~
+/* USER CODE BEGIN Includes */
+//Se determinan las dimensiones de las tablas de estados
+#define MAX_STATES 4
+#define MAX_EVENTS 2
+#define MAX_STATES2 3
+#define MAX_EVENTS2 1
+//Se crean cuatro varibles: contador(cuenta el número de pulsaciones),tiempog (me va a permitir determinar los 10ms), timpoc (cuenta las condiciones del dimmer), press (bandera)
+int contador=0;
+int tiempog=0;
+int tiempoc=0;
+int press=0;
+
+//Se crean las tablas de estados que va a ser usada.
+typedef void (*transition)();
+typedef void (*transition2)();
+/* USER CODE END Includes */
+
+//Se crea la tabla de transición de estados.
+transition state_table[MAX_STATES][MAX_EVENTS] = {
+//		TICK_E	NO_TICK_E
+		{f_detectado,f_error},	// ESPERA
+		{f_detectado,f_espera},	// DETECTADO
+		{f_liberacion, f_error},	// LIBERACION
+		{f_actualizacion, f_error}};	// ACTUALIZACION
+
+transition2 state_table2[MAX_STATES2][MAX_EVENTS2] = {
+//		TOUCH
+		{ f_apagado },	// APAGADO
+		{f_atenuado},	// ATENUADO
+		{f_encendido}};	// ENCENDIDO
+
+/* USER CODE END 0 */
+
+  /* USER CODE BEGIN 2 */
+  //Se inicializan las variables 
+  current_state= espera;
+  current_state_2=apagado;
+  current_event_2=touch;
+  //Se activa el PWM 
+    HAL_TIM_PWM_Start(&htim1,TIM_CHANNEL_4 );
+ __HAL_TIM_SET_COMPARE(&htim1,TIM_CHANNEL_4,0);
+  /* USER CODE END 2 */
+
+
+while (1)
+  {
+    /* USER CODE END WHILE */
+
+    /* USER CODE BEGIN 3 */
+
+	  
+	  current_event = f_espera() ;
+	  if( current_event>=0 && current_event <= MAX_EVENTS &&
+	  	 current_state >= 0 && current_state <= MAX_STATES){
+	  	 state_table[current_state][current_event]();
+
+
+
+		if(press==1 && current_event_2>=0 && current_event_2<= MAX_EVENTS2 &&
+		   current_state_2 >= 0 && current_state_2 <= MAX_STATES2){
+			state_table2[current_state_2][current_event_2]();
+			}
+
+	  }
+
+
+    /* USER CODE BEGIN 3 */
+       }
+  /* USER CODE END 3 */
+}
+
+/* USER CODE BEGIN 4 */
+
+void f_error(void){
+	current_state=espera;
+}
+
+int8_t f_espera (void){
+
+	// Se pone el signo ! antes del HAL, para detectar que el pulsador fue oprimido, devolviendo un 0.
+	    if (!HAL_GPIO_ReadPin(B1_GPIO_Port, B1_Pin)){
+	    	return tick_e;
+		}else{
+			return no_tick_e;
+		}
+}
+
+
+void f_detectado (void){
+
+	//Se hace el conteo de los 10ms, dado que no se puede modificar la variable tick_time se hace una resta con una variable que se cambia constantemente
+	if((tick_time-tiempog)>=10){
+	// La variable tiempoc es para la segunda máquina de estados
+	tiempoc=tick_time-tiempog;
+	tiempog=tick_time;
+	// Se activa la bandera
+	press=1;
+	contador++;
+	current_state=liberacion;
+
+	}else{
+
+	tiempog=tick_time;
+	press=0;
+	current_state=espera;
+	current_event= no_tick_e;
+
+	}
+}
+
+void f_liberacion (void){
+
+	if(HAL_GPIO_ReadPin(B1_GPIO_Port, B1_Pin)){
+
+	current_state= actualizacion ;
+
+	}
+}
+
+void f_actualizacion (void){
+
+
+	current_state=espera;
+
+
+}
+
+void f_apagado (void){
+	
+	
+   //Se apaga el LED y se determina cual va a ser el siguiente estado dependiendo de tiempoc
+	__HAL_TIM_SET_COMPARE(&htim1,TIM_CHANNEL_4,0);
+	if (press==1 && tiempoc >= 20000){
+		__HAL_TIM_SET_COMPARE(&htim1,TIM_CHANNEL_4,99);
+		current_state_2=encendido;
+		 current_event_2=touch;
+		 // Se desactiva la bandera
+		 press=0;
+
+
+	} else if (press==1 &&  tiempoc < 20000 ){
+		__HAL_TIM_SET_COMPARE(&htim1,TIM_CHANNEL_4,5);
+		current_state_2=atenuado;
+		 current_event_2=touch;
+		 // Se desactiva la bandera
+		 press=0;
+
+	}
+}
+
+void f_atenuado (void){
+
+
+	//El LED pasa a un estado atenuado y se determina cual va a ser el siguiente estado dependiendo de tiempoc
+	if (press==1 &&  tiempoc >=4000){
+		__HAL_TIM_SET_COMPARE(&htim1,TIM_CHANNEL_4,0);
+		current_state_2=apagado;
+		 current_event_2=touch;
+		 // Se desactiva la bandera
+		 press=0;
+
+	} else if (press==1 &&  tiempoc <4000 ){
+		__HAL_TIM_SET_COMPARE(&htim1,TIM_CHANNEL_4,99);
+		current_state_2=encendido;
+		 current_event_2=touch;
+		 // Se desactiva la bandera
+		 press=0;
+
+	}
+}
+
+void f_encendido (void){
+
+	
+	//El LED pasa a un estado brillo total y se determina cual va a ser el siguiente estado dependiendo de tiempoc
+	if (press==1 && tiempoc >=4000){
+	__HAL_TIM_SET_COMPARE(&htim1,TIM_CHANNEL_4,5);
+    current_state_2=atenuado;
+    current_event_2=touch;
+    // Se desactiva la bandera
+    press=0;
+
+	} else if (press==1 && tiempoc < 4000){
+		__HAL_TIM_SET_COMPARE(&htim1,TIM_CHANNEL_4,0);
+		current_state_2=apagado;
+		current_event_2=touch;
+		 // Se desactiva la bandera
+		 press=0;
+	}
+}
+
+
+/* USER CODE END 4 */
+
+
+~~~
 Pasos para correr el programa [Aquí](https://github.com/MarianaEstrada/Pasos-para-correr-un-proyecto/blob/master/README.md)
 
 Pasos para correr paso a paso el programa [Aquí](https://github.com/MarianaEstrada/Pasos-para-correr-paso-a-paso-)

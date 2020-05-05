@@ -745,12 +745,12 @@ void f_error(void){
 
 int8_t f_espera (void){
 
-	// Se pone el signo ! antes del HAL, para detectar que el pulsador fue oprimido, devolviendo un 0.
-	    if (!HAL_GPIO_ReadPin(B1_GPIO_Port, B1_Pin)){
-	    	return tick_e;
-		}else{
-			return no_tick_e;
-		}
+// Se pone el signo ! antes del HAL, para detectar que el pulsador fue oprimido, devolviendo un 0.
+    if (!HAL_GPIO_ReadPin(B1_GPIO_Port, B1_Pin)){
+	return tick_e;
+	}else{
+		return no_tick_e;
+	}
 }
 
 
@@ -799,19 +799,19 @@ void f_apagado (void){
    //Se apaga el LED y se determina cual va a ser el siguiente estado dependiendo de tiempoc
 	__HAL_TIM_SET_COMPARE(&htim1,TIM_CHANNEL_4,0);
 	if (press==1 && tiempoc >= 20000){
-		__HAL_TIM_SET_COMPARE(&htim1,TIM_CHANNEL_4,99);
-		current_state_2=encendido;
-		 current_event_2=touch;
-		 // Se desactiva la bandera
-		 press=0;
+	__HAL_TIM_SET_COMPARE(&htim1,TIM_CHANNEL_4,99);
+	current_state_2=encendido;
+	 current_event_2=touch;
+	 // Se desactiva la bandera
+	 press=0;
 
 
 	} else if (press==1 &&  tiempoc < 20000 ){
-		__HAL_TIM_SET_COMPARE(&htim1,TIM_CHANNEL_4,5);
-		current_state_2=atenuado;
-		 current_event_2=touch;
-		 // Se desactiva la bandera
-		 press=0;
+	__HAL_TIM_SET_COMPARE(&htim1,TIM_CHANNEL_4,5);
+	current_state_2=atenuado;
+	 current_event_2=touch;
+	 // Se desactiva la bandera
+	 press=0;
 
 	}
 }
@@ -821,18 +821,18 @@ void f_atenuado (void){
 
 	//El LED pasa a un estado atenuado y se determina cual va a ser el siguiente estado dependiendo de tiempoc
 	if (press==1 &&  tiempoc >=4000){
-		__HAL_TIM_SET_COMPARE(&htim1,TIM_CHANNEL_4,0);
-		current_state_2=apagado;
-		 current_event_2=touch;
-		 // Se desactiva la bandera
-		 press=0;
+	    __HAL_TIM_SET_COMPARE(&htim1,TIM_CHANNEL_4,0);
+	    current_state_2=apagado;
+	    current_event_2=touch;
+	    // Se desactiva la bandera
+	    press=0;
 
 	} else if (press==1 &&  tiempoc <4000 ){
-		__HAL_TIM_SET_COMPARE(&htim1,TIM_CHANNEL_4,99);
-		current_state_2=encendido;
-		 current_event_2=touch;
-		 // Se desactiva la bandera
-		 press=0;
+	    __HAL_TIM_SET_COMPARE(&htim1,TIM_CHANNEL_4,99);
+	    current_state_2=encendido;
+	     current_event_2=touch;
+	     // Se desactiva la bandera
+	     press=0;
 
 	}
 }
@@ -842,11 +842,11 @@ void f_encendido (void){
 	
 	//El LED pasa a un estado brillo total y se determina cual va a ser el siguiente estado dependiendo de tiempoc
 	if (press==1 && tiempoc >=4000){
-	__HAL_TIM_SET_COMPARE(&htim1,TIM_CHANNEL_4,5);
-    current_state_2=atenuado;
-    current_event_2=touch;
-    // Se desactiva la bandera
-    press=0;
+	    __HAL_TIM_SET_COMPARE(&htim1,TIM_CHANNEL_4,5);
+    	    current_state_2=atenuado;
+            current_event_2=touch;
+            // Se desactiva la bandera
+            press=0;
 
 	} else if (press==1 && tiempoc < 4000){
 		__HAL_TIM_SET_COMPARE(&htim1,TIM_CHANNEL_4,0);

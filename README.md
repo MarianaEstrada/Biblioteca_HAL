@@ -891,7 +891,7 @@ Después de haber instalado el programa:
 6. Siguiendo el mismo proceso anterior se instala también node-red-node-serialport.
 7.Con ayuda de los comando que estan al lado izquierdo de la pantalla se realiza la siguiente configuración:
 
-![node-red-4](https://github.com/MarianaEstrada/Biblioteca_HAL/blob/master/Imagenes/node-red-4.PNG).
+![node-red-5](https://github.com/MarianaEstrada/Biblioteca_HAL/blob/master/Imagenes/node-red-5.PNG).
 
 8 Finalmente se pone el siguiente código en el STM32CUBEIDE:
 

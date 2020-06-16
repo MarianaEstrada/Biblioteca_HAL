@@ -892,9 +892,21 @@ Después de haber instalado el programa:
 
 7.Con ayuda de los comando que estan al lado izquierdo de la pantalla se realiza la siguiente configuración:
 
-![node-red-5](https://github.com/MarianaEstrada/Biblioteca_HAL/blob/master/Imagenes/node-red-5.PNG).
+![node-red-6](https://github.com/MarianaEstrada/Biblioteca_HAL/blob/master/Imagenes/node-red-6.PNG).
 
-8 Finalmente se pone el siguiente código en el STM32CUBEIDE:
+8. En la esquina superior derecha se oprime el botón Deploy.
+
+![node-red-7](https://github.com/MarianaEstrada/Biblioteca_HAL/blob/master/Imagenes/node-red-7.PNG).
+
+8. Después va ir a la esquina superior derecha y se oprime el símbolo que tiene una flecha y un cuadrado.
+
+![node-red-8](https://github.com/MarianaEstrada/Biblioteca_HAL/blob/master/Imagenes/node-red-8.PNG).
+
+9. Entonces aparecerá la siguiente página.
+
+![node-red-9](https://github.com/MarianaEstrada/Biblioteca_HAL/blob/master/Imagenes/node-red-9.PNG).
+
+10 Finalmente se pone el siguiente código en el STM32CUBEIDE:
 
 ~~~
 /* USER CODE BEGIN Header */

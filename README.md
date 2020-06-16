@@ -865,3 +865,13 @@ void f_encendido (void){
 Pasos para correr el programa [Aquí](https://github.com/MarianaEstrada/Pasos-para-correr-un-proyecto/blob/master/README.md)
 
 Pasos para correr paso a paso el programa [Aquí](https://github.com/MarianaEstrada/Pasos-para-correr-paso-a-paso-)
+
+
+## Uso del Node-red
+
+Después de haberinstalado el programa.
+
+1. Se oprime en el teclado windows + r y ponemos el comando cmd, en la ventana de color negro que aparece pones node-red y esperamos a que se inicialice el programa.
+2. En una ventana de Chrome ponemos localhost:1880.
+
+

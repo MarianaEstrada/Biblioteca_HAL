@@ -889,6 +889,7 @@ Después de haber instalado el programa:
 ![node-red-3](https://github.com/MarianaEstrada/Biblioteca_HAL/blob/master/Imagenes/node-red-3.PNG)
 
 6. Siguiendo el mismo proceso anterior se instala también node-red-node-serialport.
+
 7.Con ayuda de los comando que estan al lado izquierdo de la pantalla se realiza la siguiente configuración:
 
 ![node-red-5](https://github.com/MarianaEstrada/Biblioteca_HAL/blob/master/Imagenes/node-red-5.PNG).

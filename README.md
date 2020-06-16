@@ -869,9 +869,26 @@ Pasos para correr paso a paso el programa [Aquí](https://github.com/MarianaEstr
 
 ## Uso del Node-red
 
-Después de haberinstalado el programa.
+Después de haber instalado el programa:
 
 1. Se oprime en el teclado windows + r y ponemos el comando cmd, en la ventana de color negro que aparece pones node-red y esperamos a que se inicialice el programa.
-2. En una ventana de Chrome ponemos localhost:1880.
+2. En una ventana de Chrome ponemos localhost:1880. Debe aparecer la siguiente ventana:
+
+![node-red](https://github.com/MarianaEstrada/Biblioteca_HAL/blob/master/Imagenes/node-red.PNG)
+
+3. Se va a intalar el puerto serial, para esto se va la parte superior derecha de la pantalla y se oprimen en las 3 rayas.
+
+![node-red-1](https://github.com/MarianaEstrada/Biblioteca_HAL/blob/master/Imagenes/node-red-1.PNG)
+
+4. Se selecciona la opción manage palette
+
+![node-red-2](https://github.com/MarianaEstrada/Biblioteca_HAL/blob/master/Imagenes/node-red-2.PNG)
+
+5. Se va a la pestaña install y se busca node-red-dashboard y se instala.
+
+![node-red-3](https://github.com/MarianaEstrada/Biblioteca_HAL/blob/master/Imagenes/node-red-3.PNG)
+
+6. Siguiendo el mismo proceso anterior se instala también node-red-node-serialport.
+7.
 
 

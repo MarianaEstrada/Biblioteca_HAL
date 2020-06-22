@@ -1506,6 +1506,38 @@ void EXTI15_10_IRQHandler(void)
 
 ## Tareas
 
+Se va a realizar un programa el cual va a tener dos tareas, cada una de estas tareas va a estar formada por una máquina de estados:
+
+1. La primera máquina de estados es la siguiente:
+
+![ME3](https://github.com/MarianaEstrada/Biblioteca_HAL/blob/master/Imagenes/ME3.PNG)
+
+Esta máquina de estados lo que va a eliminar el donounce en el pulsador. Tiene 4 estados:
+
+* Waiting: Espera a que sea oprimido el botón.
+* Detected: Si el pulsador despúes de 10ms está en alto se toma como una pulsación, de lo contrario se toma como un rebote y regresa a el estado Waiting.
+* Wating for relase: Se espera a que se libere el botón.
+* Updata: Se actualizan las variables usadas.
+
+2. La segunda máquina de estados es la siguiente:
+
+![ME4](https://github.com/MarianaEstrada/Biblioteca_HAL/blob/master/Imagenes/ME4.PNG)
+
+Esta máquina tiene 3 estados:
+
+* OFF= LED apagado
+* DIM = El LED solo enciende a una fracción de su intensidad.
+* BRIGHT= El LED enciende a su máxima inttensidad.
+
+El funcionamiento de la máquina de estados es el siguiente:
+
+* OFF: Si desde que se paso a este estado hasta que se vuelve a oprimir el botón el tiempo es mayor a 20 seg el estado del LED va a ser Bright, pero si el pulsador se oprimió antes de los 20 seg el estado del LED pasa a DIM.
+* Dim: Si desde que se paso a este estado hasta que se vuelve a oprimir el botón el tiempo es mayor o igual a 4 seg el LED pasa a el estado OFF, de lo contrario si el tiempo es menor a 4seg el LED pasa a estado BRIGHT.
+* Bright: Si desde que se paso a este estado hasta que se vuelve a oprimir el botón el tiempo es mayor o igual a 4 seg el LED pasa a el estado DIM , de lo contrario si el tiempo es menor a 4seg el LED pasa a estado OFF.
+
+
+Para solucionar este problema se realiza lo siguiente:
+
 * Primero se debe configurar el timer, de la siguiente forma:
 
 1. En el ioc del proyecto se va la sección Timer.

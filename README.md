@@ -465,6 +465,7 @@ Esta máquina de estados va a eliminar el donounce del pulsador. Tiene 4 estados
 * Updata: Se actualizan las variables usadas.
 
 
+Para solucionar este problema se realiza lo siguiente:
 
 * En la carpeta stm32l4xx_it.c se pone lo siguiente:
 ~~~

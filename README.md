@@ -1,4 +1,6 @@
-# Biblioteca HAL
+# Sistemas en tiempo real
+
+## Biblioteca HAL
 
 Permite gestionar el periférico GPIO. Se usan de la siguiente forma:
 * Para activar o desactivar los pines de algún puerto en específico: 
@@ -1501,3 +1503,38 @@ void EXTI15_10_IRQHandler(void)
 /************************ (C) COPYRIGHT STMicroelectronics *****END OF FILE****/
 
 ~~~
+
+## Tareas
+
+* Primero se debe configurar el timer, de la siguiente forma:
+
+1. En el ioc del proyecto se va la sección Timer.
+
+![paso1T](https://github.com/MarianaEstrada/Biblioteca_HAL/blob/master/Imagenes/paso1T.PNG)
+
+2. Se selecciona el timer que se va a usar, posteriormente en la ventana que aparece se selecciona el canal y se pone la opcion PWM Generation
+
+![paso2T](https://github.com/MarianaEstrada/Biblioteca_HAL/blob/master/Imagenes/paso2T.PNG)
+
+3. En la casilla configuración se selecciona GPIO SETTINGS y en la opción GPIO Pull-Up/Pull-Down se pone la opción Pull-up.
+
+![paso3T](https://github.com/MarianaEstrada/Biblioteca_HAL/blob/master/Imagenes/paso3T.PNG)
+
+4. En la casilla cofiguraciones se selecciona PARAMETER SETTINGS y se configura el valor el prescaler y conter period
+
+![paso4T](https://github.com/MarianaEstrada/Biblioteca_HAL/blob/master/Imagenes/paso4T.PNG)
+
+5. Finalmente se le da clic al siguiente icono:
+
+![paso5T](https://github.com/MarianaEstrada/Biblioteca_HAL/blob/master/Imagenes/paso5T.PNG)
+
+
+* Segundo se van a crear las tareas, para el eujercicio se crearán 2:
+
+1. En el ioc del proyecto se va la sección middleware y se selecciona FREERTOS.
+
+![Img1](https://github.com/MarianaEstrada/Biblioteca_HAL/blob/master/Imagenes/Img1.PNG)
+
+
+
+

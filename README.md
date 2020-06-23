@@ -1588,6 +1588,7 @@ Para solucionar este problema se realiza lo siguiente:
 ![Img1](https://github.com/MarianaEstrada/Biblioteca_HAL/blob/master/Imagenes/Img1.PNG)
 
 2. En interface se selecciona la opción CMSIS_V2.
+
 ![Img2](https://github.com/MarianaEstrada/Biblioteca_HAL/blob/master/Imagenes/Img2.PNG)
 
 3. Finalmente en la opción Tasks and Queues se crean las tareas que van a ser usadas y se le da la prioridad a cada una de ellas.

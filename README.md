@@ -1580,12 +1580,8 @@ Para solucionar este problema se realiza lo siguiente:
 
 ![paso4T](https://github.com/MarianaEstrada/Biblioteca_HAL/blob/master/Imagenes/paso4T.PNG)
 
-5. Finalmente se le da clic al siguiente icono:
 
-![paso5T](https://github.com/MarianaEstrada/Biblioteca_HAL/blob/master/Imagenes/paso5T.PNG)
-
-
-* Segundo se van a crear las tareas, para el eujercicio se crearán 2:
+* Segundo se van a crear las tareas, para el ejercicio se crearán 2:
 
 1. En el ioc del proyecto se va la sección middleware y se selecciona FREERTOS.
 
@@ -1594,7 +1590,7 @@ Para solucionar este problema se realiza lo siguiente:
 2. En interface se selecciona la opción CMSIS_V2.
 ![Img2](https://github.com/MarianaEstrada/Biblioteca_HAL/blob/master/Imagenes/Img2.PNG)
 
-3. Finalmente en la opción Tasks and Queues se vcrean las tareas que van a ser usadas y se le da la prioridad a cada una de ellas.
+3. Finalmente en la opción Tasks and Queues se crean las tareas que van a ser usadas y se le da la prioridad a cada una de ellas.
 
 ![Img3](https://github.com/MarianaEstrada/Biblioteca_HAL/blob/master/Imagenes/Img3.PNG)
 
@@ -1603,6 +1599,10 @@ Para solucionar este problema se realiza lo siguiente:
 1. En el ioc del proyecto se va la seccionar System core y se selecciona la opción SYS, aquí en la lista de Timebase source se selecciona el Timer 2.
 
 ![Img4](https://github.com/MarianaEstrada/Biblioteca_HAL/blob/master/Imagenes/Img4.PNG)
+
+2. Finalmente se le da clic al siguiente icono:
+
+![paso5T](https://github.com/MarianaEstrada/Biblioteca_HAL/blob/master/Imagenes/paso5T.PNG)
 
 Ahora se añaden los siguientes segmentos de código:
 
